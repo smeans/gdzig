@@ -222,8 +222,8 @@ pub fn registerMethod(comptime T: type, comptime name: [:0]const u8) void {
     MethodBinder.arg_metadata[0] = c.GDEXTENSION_METHOD_ARGUMENT_METADATA_NONE;
     MethodBinder.arg_properties[0] = c.GDExtensionPropertyInfo{
         .type = @intFromEnum(Variant.Tag.forType(MethodBinder.ReturnType.?)),
-        .name = @ptrCast(@constCast(&StringName.init())),
-        .class_name = @ptrCast(@constCast(&StringName.init())),
+        .name = @ptrCast(@constCast(&StringName.empty())),
+        .class_name = @ptrCast(@constCast(&StringName.empty())),
         .hint = @intFromEnum(PropertyHint.property_hint_none),
         .hint_string = @ptrCast(@constCast(&String.init())),
         .usage = @bitCast(PropertyUsageFlags.property_usage_none),
@@ -232,8 +232,8 @@ pub fn registerMethod(comptime T: type, comptime name: [:0]const u8) void {
     inline for (1..MethodBinder.ArgCount) |i| {
         MethodBinder.arg_properties[i] = c.GDExtensionPropertyInfo{
             .type = @intFromEnum(Variant.Tag.forType(MethodBinder.ArgsTuple[i].type)),
-            .name = @ptrCast(@constCast(&StringName.init())),
-            .class_name = meta.typeName(MethodBinder.ArgsTuple[i].type),
+            .name = @ptrCast(@constCast(&StringName.empty())),
+            .class_name = if (oopz.isClass(MethodBinder.ArgsTuple[i].type)) meta.typeName(MethodBinder.ArgsTuple[i].type) else @ptrCast(@constCast(&StringName.empty())),
             .hint = @intFromEnum(PropertyHint.property_hint_none),
             .hint_string = @ptrCast(@constCast(&String.init())),
             .usage = @bitCast(PropertyUsageFlags.property_usage_none),
@@ -300,8 +300,6 @@ pub fn registerSignal(comptime T: type, comptime S: type) void {
     }
 }
 
-pub fn init() void {}
-
 pub fn deinit() void {
     registered_signals.deinit(godot.heap.general_allocator);
     registered_methods.deinit(godot.heap.general_allocator);
@@ -311,6 +309,8 @@ pub fn deinit() void {
 const std = @import("std");
 const ArenaAllocator = std.heap.ArenaAllocator;
 const StringHashMap = std.StringHashMapUnmanaged;
+
+const oopz = @import("oopz");
 
 const godot = @import("gdzig.zig");
 const c = godot.c;

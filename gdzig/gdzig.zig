@@ -114,17 +114,13 @@ pub var raw: Interface = undefined;
 
 pub fn typeName(comptime T: type) *builtin.StringName {
     const Static = &struct {
-        const _ = T;
+        const _ = meta.typeShortName(T);
         var name: builtin.StringName = undefined;
         var init: bool = false;
     };
 
     if (!Static.init) {
-        Static.name = builtin.StringName.fromComptimeLatin1(blk: {
-            const full = @typeName(T);
-            const pos = std.mem.lastIndexOfScalar(u8, full, '.') orelse break :blk full;
-            break :blk full[pos + 1 ..];
-        });
+        Static.name = builtin.StringName.fromComptimeLatin1(Static._);
         Static.init = true;
     }
 

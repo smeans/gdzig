@@ -1,3 +1,7 @@
+pub inline fn empty() StringName {
+    return .fromComptimeLatin1("");
+}
+
 /// Creates a StringName from a Latin-1 encoded C string.
 ///
 /// If `is_static` is true, then:
