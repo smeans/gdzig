@@ -1,19 +1,14 @@
 [tools]
-"aqua:godotengine/godot" = "latest"
+godot = "latest"
 pre-commit = "latest"
-"ubi:DonIsaac/zlint" = "latest"
+zlint = "latest"
 usage = "latest"
 zig = "0.15.1"
 zls = "0.15.0"
 
-[tasks."example:build"]
-dir = "example"
-run = "zig build"
-
-[tasks."example:run"]
-depends = ["example:build"]
-dir = "example/project"
-run = "godot"
+[alias]
+godot = "asdf:https://github.com/mkungla/asdf-godot"
+zlint = "ubi:DonIsaac/zlint"
 
 [tasks."docs:build"]
 run = "zig build docs"
