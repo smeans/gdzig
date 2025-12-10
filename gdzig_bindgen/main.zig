@@ -86,5 +86,6 @@ pub fn main() !void {
 }
 
 test {
+    std.testing.log_level = .err;
     std.testing.refAllDecls(@This());
 }
