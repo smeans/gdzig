@@ -183,6 +183,7 @@ pub fn build(b: *Build) void {
     b.step("build-bindgen", "Build the gdzig_bindgen executable").dependOn(&bindgen_install.step);
     b.step("run-bindgen", "Run bindgen to generate builtin/class code").dependOn(&bindings_install.step);
     b.step("docs", "Install docs into zig-out/docs").dependOn(&docs_install.step);
+    b.step("check", "Check the build without installing artifacts").dependOn(&gdzig_lib.step);
 
     const test_step = b.step("test", "Run tests");
     test_step.dependOn(&tests_bindgen_run.step);
@@ -192,8 +193,8 @@ pub fn build(b: *Build) void {
     // Default build
     //
 
+    b.default_step.dependOn(&gdzig_lib.step);
     b.installArtifact(bindgen_exe);
-    b.installArtifact(gdzig_lib);
     b.installDirectory(.{
         .source_dir = gdzig_lib.getEmittedDocs(),
         .install_dir = .prefix,
