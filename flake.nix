@@ -45,11 +45,12 @@
           });
           inherit (pkgs) lib stdenv;
 
-          # Wrap godot with nixGL for non-NixOS systems (Mesa for AMD/Intel)
           godotWrapped =
             if stdenv.hostPlatform.isLinux then
               pkgs.writeShellScriptBin "godot" ''
-                exec ${pkgs.nixgl.nixGLMesa}/bin/nixGLMesa ${pkgs.godot}/bin/godot "$@"
+                exec ${pkgs.nixgl.nixVulkanIntel}/bin/nixVulkanIntel \
+                     ${pkgs.nixgl.nixGLMesa}/bin/nixGLMesa \
+                     ${pkgs.godot}/bin/godot "$@"
               ''
             else
               pkgs.godot;
