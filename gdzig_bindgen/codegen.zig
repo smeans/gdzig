@@ -373,10 +373,10 @@ fn writeClass(w: *CodeWriter, class: *const Context.Class, ctx: *const Context) 
         try w.printLine(
             \\/// Allocates an empty {0s}.
             \\pub fn init() *{0s} {{
-            \\    return @ptrCast(raw.classdbConstructObject(@ptrCast(typeName({0s}))).?);
+            \\    return @ptrCast(raw.classdbConstructObject(@ptrCast(&StringName.fromComptimeLatin1("{1s}"))).?);
             \\}}
             \\
-        , .{class.name});
+        , .{ class.name, class.name_api });
     }
 
     // Functions
