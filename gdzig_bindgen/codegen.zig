@@ -18,6 +18,8 @@ fn writeBuiltins(ctx: *const Context) !void {
         var writer = &file_writer.interface;
         var w: CodeWriter = .init(writer);
 
+        try writeMixin(&w, "builtin.mixin.zig", .{}, ctx);
+
         // Variant is a special case, since it is not a generated file.
         try w.writeLine(
             \\pub const Variant = @import("builtin/variant.zig").Variant;
@@ -290,6 +292,8 @@ fn writeClasses(ctx: *const Context) !void {
         var file_writer = file.writer(&buf);
         var writer = &file_writer.interface;
         var w = CodeWriter.init(writer);
+
+        try writeMixin(&w, "class.mixin.zig", .{}, ctx);
 
         for (ctx.classes.values()) |class| {
             try w.printLine(
@@ -574,6 +578,8 @@ fn writeGlobals(ctx: *const Context) !void {
         var file_writer = file.writer(&buf);
         var writer = &file_writer.interface;
         var w = CodeWriter.init(writer);
+
+        try writeMixin(&w, "global.mixin.zig", .{}, ctx);
 
         for (ctx.enums.values()) |@"enum"| {
             try w.printLine(
@@ -1159,6 +1165,8 @@ fn writeModules(ctx: *const Context) !void {
 }
 
 fn writeModule(w: *CodeWriter, module: *const Context.Module, ctx: *const Context) !void {
+    try writeMixin(w, "{s}.mixin.zig", .{module.name}, ctx);
+
     for (module.functions) |*function| {
         if (function.skip) continue;
 
