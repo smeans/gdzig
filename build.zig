@@ -1,11 +1,4 @@
-const test_versions = &.{
-    // "4.1",
-    // "4.2",
-    // "4.3",
-    // "4.4",
-    "4.5",
-};
-const default_version = test_versions[test_versions.len - 1];
+const default_version = "4.5";
 
 pub fn build(b: *Build) void {
     //
